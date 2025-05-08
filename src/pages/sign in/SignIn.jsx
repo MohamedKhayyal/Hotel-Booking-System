@@ -1,10 +1,61 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth, db } from "../../firebase/config";
+import { setDoc, doc } from "firebase/firestore";
+import { toast } from "react-toastify";
+import { useState } from "react";
+
 export default function SignIn() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+
+      if (user) {
+        const nameParts = fullName.trim().split(" ");
+        const firstName = nameParts[0] || "";
+        const lastName = nameParts.slice(1).join(" ") || "";
+
+        await updateProfile(user, { displayName: fullName });
+
+        await setDoc(doc(db, "Users", user.uid), {
+          email: user.email,
+          fullName: fullName,
+          firstName: firstName,
+          lastName: lastName,
+        });
+        console.log("success");
+        toast.success("User Registered successfully!", {
+          position: "top-center",
+        });
+
+        setTimeout(() => {
+          navigate("/login"); // Corrected the path
+        }, 1000);
+      }
+    } catch (error) {
+      toast.error(error.message, { position: "bottom-center" });
+    }
+  };
+
   return (
     <div
       style={{ height: "100vh", placeContent: "center", placeItems: "center" }}
     >
-      <form className="bg-white text-gray-500 max-w-[340px] w-full mx-4 md:p-6 p-4 py-8 text-left text-sm rounded-lg shadow-[0px_0px_10px_0px] shadow-black/10">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white text-gray-500 max-w-[340px] w-full mx-4 md:p-6 p-4 py-8 text-left text-sm rounded-lg shadow-[0px_0px_10px_0px] shadow-black/10"
+      >
         <h2 className="text-2xl font-bold mb-9 text-center text-gray-800">
           Sign Up
         </h2>
@@ -26,6 +77,7 @@ export default function SignIn() {
             />
           </svg>
           <input
+            onChange={(e) => setFullName(e.target.value)}
             className="w-full outline-none bg-transparent py-2.5"
             type="text"
             placeholder="Username"
@@ -57,6 +109,7 @@ export default function SignIn() {
             />
           </svg>
           <input
+            onChange={(e) => setEmail(e.target.value)}
             className="w-full outline-none bg-transparent py-2.5"
             type="email"
             placeholder="Email"
@@ -88,13 +141,17 @@ export default function SignIn() {
             />
           </svg>
           <input
+            onChange={(e) => setPassword(e.target.value)}
             className="w-full outline-none bg-transparent py-2.5"
             type="password"
             placeholder="Password"
             required
           />
         </div>
-        <button className="w-full mb-3 bg-indigo-500 hover:bg-indigo-600 transition-all active:scale-95 py-2.5 rounded text-white font-medium">
+        <button
+          type="submit"
+          className="w-full mb-3 bg-indigo-500 hover:bg-indigo-600 transition-all active:scale-95 py-2.5 rounded text-white font-medium"
+        >
           Create Account
         </button>
         <p className="text-center mt-4">

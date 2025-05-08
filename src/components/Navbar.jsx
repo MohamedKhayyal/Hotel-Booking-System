@@ -1,9 +1,12 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
+import logo from "../assets/logo.svg";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = React.useState(false);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const location = useLocation();
 
   React.useEffect(() => {
     const handleScroll = () => {
@@ -16,7 +19,7 @@ export default function Navbar() {
 
   const navLinks = [
     { name: "Home", path: "/home" },
-    { name: "Products", path: "/product" },
+    { name: "Hotels", path: "/room" },
   ];
 
   return (
@@ -24,16 +27,18 @@ export default function Navbar() {
       className={`fixed top-0 left-0 w-full flex items-center justify-between px-4 md:px-16 lg:px-24 xl:px-32 transition-all duration-500 z-50 ${
         isScrolled
           ? "bg-white/80 shadow-md text-gray-700 backdrop-blur-lg py-3 md:py-4"
+          : location.pathname === "/home"
+          ? "py-4 md:py-6 text-white"
           : "bg-indigo-500 py-4 md:py-6 text-white"
       }`}
     >
-      <a href="/" className="flex items-center gap-2">
+      <Link to="home">
         <img
-          src="https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/dummyLogo/dummyLogoWhite.svg"
+          src={logo}
           alt="logo"
           className={`h-9 ${isScrolled ? "invert opacity-80" : ""}`}
         />
-      </a>
+      </Link>
       <div className="hidden md:flex items-center gap-4 lg:gap-8">
         {navLinks.map((link, i) => (
           <Link
@@ -51,6 +56,13 @@ export default function Navbar() {
             />
           </Link>
         ))}
+        <button
+          className={`border px-4 py-1 text-sm font-light rounded-full cursor-pointer ${
+            isScrolled ? "text-black" : "text-white"
+          } transition-all`}
+        >
+          Dashboord
+        </button>
       </div>
       <div className="hidden md:flex items-center gap-4">
         <svg
@@ -115,7 +127,9 @@ export default function Navbar() {
             {link.name}
           </Link>
         ))}
-
+        <button className="border px-4 py-1 text-sm font-light rounded-full cursor-pointer transition-all">
+          Dashboord
+        </button>
         <Link
           to="/login"
           onClick={() => setIsMenuOpen(false)}

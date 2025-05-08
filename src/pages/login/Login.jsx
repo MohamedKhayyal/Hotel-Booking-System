@@ -1,11 +1,51 @@
 import { Link } from "react-router-dom";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { auth } from "../../firebase/config";
 
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false); // For button loading state
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const res = await signInWithEmailAndPassword(auth, email, password);
+      toast.success(`Welcome back, ${res.user.displayName || "User"}!`, {
+        position: "top-center",
+      });
+      navigate("/home");
+    } catch (error) {
+      if (error.code === "auth/user-not-found") {
+        toast.error("No account found with this email.", {
+          position: "bottom-center",
+        });
+      } else if (error.code === "auth/wrong-password") {
+        toast.error("Incorrect password. Try again.", {
+          position: "bottom-center",
+        });
+      } else {
+        toast.error(error.message, {
+          position: "bottom-center",
+        });
+      }
+    }
+    setLoading(false);
+  };
+
   return (
     <div
       style={{ height: "100vh", placeContent: "center", placeItems: "center" }}
     >
-      <form className="bg-white text-gray-500 max-w-[340px] w-full mx-4 md:p-6 p-4 py-8 text-left text-sm rounded-xl shadow-[0px_0px_10px_0px] shadow-black/10">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white text-gray-500 max-w-[340px] w-full mx-4 md:p-6 p-4 py-8 text-left text-sm rounded-xl shadow-[0px_0px_10px_0px] shadow-black/10"
+      >
         <h2 className="text-2xl font-bold mb-9 text-center text-gray-800">
           Welcome Back
         </h2>
@@ -37,6 +77,8 @@ export default function Login() {
             className="w-full outline-none bg-transparent py-2.5"
             type="email"
             placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
         </div>
@@ -57,6 +99,8 @@ export default function Login() {
             className="w-full outline-none bg-transparent py-2.5"
             type="password"
             placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
@@ -71,9 +115,10 @@ export default function Login() {
         </div>
         <button
           type="submit"
+          disabled={loading}
           className="w-full mb-3 bg-indigo-500 hover:bg-indigo-600/90 transition py-2.5 rounded text-white font-medium"
         >
-          Log In
+          {loading ? "Logging in..." : "Log In"}
         </button>
         <p className="text-center mt-4">
           Don't have an account?{" "}
