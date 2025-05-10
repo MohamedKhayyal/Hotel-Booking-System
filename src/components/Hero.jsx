@@ -1,4 +1,3 @@
-import React from "react";
 import heroImage from "../assets/heroImage.png";
 
 export default function Hero() {
@@ -47,6 +46,14 @@ export default function Hero() {
             placeholder="Type here"
             required
           />
+          <datalist id="destinations">
+            <option value="New York, USA" />
+            <option value="Los Angeles, USA" />
+            <option value="London, UK" />
+            <option value="Paris, France" />
+            <option value="Tokyo, Japan" />
+            <option value="Dubai, UAE" />
+          </datalist>
         </div>
 
         <div>

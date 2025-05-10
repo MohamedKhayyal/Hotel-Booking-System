@@ -121,7 +121,7 @@ export default function Login() {
           {loading ? "Logging in..." : "Log In"}
         </button>
         <p className="text-center mt-4">
-          Don't have an account?{" "}
+          Don't have an account?
           <Link to="/" className="text-blue-500 underline">
             Sign up
           </Link>
