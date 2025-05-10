@@ -1,19 +1,17 @@
-import { Route, Routes } from "react-router-dom";
-import SignIn from "./pages/sign in/SignIn";
-import Login from "./pages/login/Login";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./pages/home/Home";
-import { ToastContainer } from "react-toastify";
 
 export default function App() {
+  const isOwnerPath = useLocation().pathname.includes("owner");
+
   return (
     <div>
-      <Navbar />
+      {!isOwnerPath && <Navbar />}
       <Routes>
-        <Route index element={<SignIn />} />
-        <Route path="/login" element={<Login />} />
         <Route
-          path="/home"
+          index
+          path="/"
           element={
             <div className="min-h-[70vh]">
               <Home />
@@ -21,7 +19,6 @@ export default function App() {
           }
         />
       </Routes>
-      <ToastContainer />
     </div>
   );
 }
