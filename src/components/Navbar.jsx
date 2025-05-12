@@ -36,7 +36,7 @@ export default function Navbar() {
   );
   const navLinks = [
     { name: "Home", path: "/" },
-    { name: "Hotels", path: "/room" },
+    { name: "Hotels", path: "/rooms" },
   ];
 
   return (
