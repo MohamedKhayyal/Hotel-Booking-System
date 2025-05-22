@@ -6,12 +6,11 @@ import {
   roomCommonData,
   exclusiveOffers,
 } from "../../assets/assets";
-import { useState } from "react";
+import DetailImage from "../../components/DetailImage";
 
 export default function RoomDetail() {
   const { id } = useParams();
   const room = roomsDummyData.find((r) => r._id === id);
-  const [activeImg, setActiveImg] = useState(0);
   const offer =
     exclusiveOffers.find(
       (o) =>
@@ -49,33 +48,8 @@ export default function RoomDetail() {
           <span className="text-lg font-normal text-gray-700">/night</span>
         </div>
       </div>
-      <div className="flex flex-col lg:flex-row mt-6 gap-6">
-        <div className="lg:w-1/2 w-full">
-          <img
-            src={room.images[activeImg]}
-            alt="Room"
-            className="w-full rounded-xl shadow-lg object-cover"
-          />
-        </div>
-        {/* Thumbnails grid */}
-        <div className="grid grid-cols-2 gap-4 lg:w-1/2 w-full">
-          {room.images.map((img, idx) =>
-            idx !== activeImg && idx < 5 ? (
-              <img
-                key={idx}
-                src={img}
-                alt={`Room ${idx + 1}`}
-                className={`w-full rounded-xl shadow-md object-cover cursor-pointer false ${
-                  activeImg === idx
-                    ? "border-orange-500 outline-3"
-                    : "border-transparent"
-                }`}
-                onClick={() => setActiveImg(idx)}
-              />
-            ) : null
-          )}
-        </div>
-      </div>
+
+      <DetailImage />
 
       <div className="mt-10">
         <h2 className="text-2xl font-playfair font-semibold mb-4">

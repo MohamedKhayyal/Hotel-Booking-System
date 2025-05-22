@@ -98,12 +98,7 @@ export default function Navbar() {
           </button>
         )}
       </div>
-
       <div className="hidden md:flex items-center gap-4">
-        <img
-          src={assets.searchIcon}
-          className={`h-8 ${isScrolled ? "invert" : ""}`}
-        />
         {user ? (
           <UserButton>
             <UserButton.MenuItems>
