@@ -1,4 +1,6 @@
 import { useParams } from "react-router-dom";
+import { useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   roomsDummyData,
   facilityIcons,
@@ -17,8 +19,31 @@ export default function RoomDetail() {
         room.roomType &&
         o.title.toLowerCase().includes(room.roomType.toLowerCase())
     ) || exclusiveOffers[0];
+  const checkInRef = useRef();
+  const checkOutRef = useRef();
+  const guestsRef = useRef();
+  const navigate = useNavigate();
 
   if (!room) return <div>Room not found.</div>;
+
+  function handleCheckAvailability(e) {
+    e.preventDefault();
+    const booking = {
+      roomId: room._id,
+      hotelName: room.hotel.name,
+      roomType: room.roomType,
+      address: room.hotel.address,
+      price: room.pricePerNight,
+      checkIn: checkInRef.current.value,
+      checkOut: checkOutRef.current.value,
+      guests: guestsRef.current.value,
+      image: room.images?.[0] || "",
+    };
+    const bookings = JSON.parse(localStorage.getItem("bookings") || "[]");
+    bookings.push(booking);
+    localStorage.setItem("bookings", JSON.stringify(bookings));
+    navigate("/my-bookings");
+  }
 
   return (
     <div className=" pt-28 md:pt-35 px-4 md:px-16 lg:px-24 xl:px-32">
@@ -68,33 +93,51 @@ export default function RoomDetail() {
         </div>
       </div>
 
-      <form className="flex flex-col md:flex-row items-start md:items-center justify-between bg-white shadow-[0px_0px_20px_rgba(0,0,0,0.15)] p-6 rounded-xl mx-auto mt-16 max-w-6xl">
+      <form
+        className="flex flex-col md:flex-row items-start md:items-center justify-between bg-white shadow-[0px_0px_20px_rgba(0,0,0,0.15)] p-6 rounded-xl mx-auto mt-16 max-w-6xl"
+        onSubmit={handleCheckAvailability}
+      >
         <div className="flex flex-col md:flex-row gap-6 w-full">
           <div>
             <label className="block text-gray-700 font-semibold mb-1">
               Check-In
             </label>
-            <input type="date" className="border rounded px-3 py-2 w-full" />
+            <input
+              ref={checkInRef}
+              type="date"
+              className="border rounded px-3 py-2 w-full"
+              required
+            />
           </div>
           <div>
             <label className="block text-gray-700 font-semibold mb-1">
               Check-Out
             </label>
-            <input type="date" className="border rounded px-3 py-2 w-full" />
+            <input
+              ref={checkOutRef}
+              type="date"
+              className="border rounded px-3 py-2 w-full"
+              required
+            />
           </div>
           <div>
             <label className="block text-gray-700 font-semibold mb-1">
               Guests
             </label>
             <input
+              ref={guestsRef}
               type="number"
               min={1}
               defaultValue={1}
               className="border rounded px-3 py-2 w-full"
+              required
             />
           </div>
           <div className="flex items-end">
-            <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-lg transition">
+            <button
+              type="submit"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-lg transition"
+            >
               Check Availability
             </button>
           </div>

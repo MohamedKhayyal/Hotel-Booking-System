@@ -1,6 +1,47 @@
-import { assets, cities } from "../assets/assets";
+import { assets, cities, roomsDummyData } from "../assets/assets";
 import heroImage from "../assets/heroImage.png";
+import { useRef } from "react";
+import { useNavigate } from "react-router-dom";
+
 export default function Hero() {
+  const destinationRef = useRef();
+  const checkInRef = useRef();
+  const checkOutRef = useRef();
+  const guestsRef = useRef();
+  const navigate = useNavigate();
+
+  function handleSearch(e) {
+    e.preventDefault();
+    const city = destinationRef.current.value;
+    const checkIn = checkInRef.current.value;
+    const checkOut = checkOutRef.current.value;
+    const guests = guestsRef.current.value;
+    const room = roomsDummyData.find(
+      (r) => r.city.toLowerCase() === city.toLowerCase()
+    );
+    if (!room) {
+      alert("No hotel found for this destination.");
+      return;
+    }
+
+    const booking = {
+      hotelName: room.hotel.name,
+      roomType: room.roomType,
+      address: room.hotel.address,
+      price: room.pricePerNight,
+      checkIn,
+      checkOut,
+      guests,
+      image: room.images[0],
+    };
+
+    const bookings = JSON.parse(localStorage.getItem("bookings") || "[]");
+    bookings.push(booking);
+    localStorage.setItem("bookings", JSON.stringify(bookings));
+
+    navigate("/my-bookings"); 
+  }
+
   return (
     <div
       className="flex flex-col items-start justify-center px-6 md:px-16 lg:px-24 xl:px-32 text-white bg-no-repeat bg-cover bg-center h-screen"
@@ -16,7 +57,10 @@ export default function Hero() {
         Unparalleled luxury and comfort await at the world's most exclusive
         hotels and resorts. Start your journey today
       </p>
-      <form className="bg-white text-gray-500 rounded-lg px-6 py-4 mt-8 flex flex-col md:flex-row max-md:items-start gap-4 max-md:mx-auto">
+      <form
+        className="bg-white text-gray-500 rounded-lg px-6 py-4 mt-8 flex flex-col md:flex-row max-md:items-start gap-4 max-md:mx-auto"
+        onSubmit={handleSearch}
+      >
         <div>
           <div className="flex items-center gap-2">
             <img src={assets.locationIcon} className="h-4" />
@@ -27,6 +71,7 @@ export default function Hero() {
             list="destinations"
             id="destinationInput"
             type="text"
+            ref={destinationRef}
             className=" rounded border border-gray-200 px-3 py-1.5 mt-1.5 text-sm outline-none"
             placeholder="Type here"
             required
@@ -46,6 +91,7 @@ export default function Hero() {
           <input
             id="checkIn"
             type="date"
+            ref={checkInRef}
             className=" rounded border border-gray-200 px-3 py-1.5 mt-1.5 text-sm outline-none"
           />
         </div>
@@ -59,6 +105,7 @@ export default function Hero() {
           <input
             id="checkOut"
             type="date"
+            ref={checkOutRef}
             className=" rounded border border-gray-200 px-3 py-1.5 mt-1.5 text-sm outline-none"
           />
         </div>
@@ -70,6 +117,7 @@ export default function Hero() {
             max={4}
             id="guests"
             type="number"
+            ref={guestsRef}
             className=" rounded border border-gray-200 px-3 py-1.5 mt-1.5 text-sm outline-none  max-w-16"
             placeholder="0"
           />
