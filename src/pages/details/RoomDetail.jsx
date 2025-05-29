@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   roomsDummyData,
@@ -23,6 +23,10 @@ export default function RoomDetail() {
   const checkOutRef = useRef();
   const guestsRef = useRef();
   const navigate = useNavigate();
+  const [minCheckOut, setMinCheckOut] = useState(() => {
+    const today = new Date();
+    return today.toISOString().split("T")[0];
+  });
 
   if (!room) return <div>Room not found.</div>;
 
@@ -39,10 +43,15 @@ export default function RoomDetail() {
       guests: guestsRef.current.value,
       image: room.images?.[0] || "",
     };
-    const bookings = JSON.parse(localStorage.getItem("bookings") || "[]");
+    const bookings = JSON.parse(localStorage.getItem("bookings") || []);
     bookings.push(booking);
     localStorage.setItem("bookings", JSON.stringify(bookings));
     navigate("/my-bookings");
+  }
+
+  function handleCheckInChange(e) {
+    const selected = e.target.value;
+    setMinCheckOut(selected);
   }
 
   return (
@@ -105,8 +114,10 @@ export default function RoomDetail() {
             <input
               ref={checkInRef}
               type="date"
+              min={new Date().toISOString().split("T")[0]}
               className="border rounded px-3 py-2 w-full"
               required
+              onChange={handleCheckInChange}
             />
           </div>
           <div>
@@ -116,6 +127,7 @@ export default function RoomDetail() {
             <input
               ref={checkOutRef}
               type="date"
+              min={minCheckOut}
               className="border rounded px-3 py-2 w-full"
               required
             />

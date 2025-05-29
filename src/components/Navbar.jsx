@@ -119,7 +119,9 @@ export default function Navbar() {
       </div>
 
       {/* Mobile hamburger */}
-      <div className="flex items-center gap-3 md:hidden">
+      <div
+        className={`flex items-center gap-3 md:hidden transition-opacity duration-300 opacity-100`}
+      >
         {user && (
           <UserButton>
             <UserButton.MenuItems>
@@ -134,7 +136,11 @@ export default function Navbar() {
         <img
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           src={assets.menuIcon}
-          className={`${isScrolled && "invert"} h-4`}
+          className={`h-4 transition-all duration-300 ${
+            location.pathname !== "/" || isScrolled
+              ? "invert opacity-80"
+              : "invert-0"
+          }`}
         />
       </div>
 

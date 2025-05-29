@@ -1,14 +1,20 @@
 import { assets, cities, roomsDummyData } from "../assets/assets";
 import heroImage from "../assets/heroImage.png";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 export default function Hero() {
   const destinationRef = useRef();
   const checkInRef = useRef();
   const checkOutRef = useRef();
   const guestsRef = useRef();
   const navigate = useNavigate();
+
+  const today = new Date().toISOString().split("T")[0];
+  const [minCheckOut, setMinCheckOut] = useState(today);
+
+  function handleCheckInChange(e) {
+    setMinCheckOut(e.target.value || today);
+  }
 
   function handleSearch(e) {
     e.preventDefault();
@@ -39,7 +45,7 @@ export default function Hero() {
     bookings.push(booking);
     localStorage.setItem("bookings", JSON.stringify(bookings));
 
-    navigate("/my-bookings"); 
+    navigate("/my-bookings");
   }
 
   return (
@@ -92,21 +98,25 @@ export default function Hero() {
             id="checkIn"
             type="date"
             ref={checkInRef}
+            min={today}
             className=" rounded border border-gray-200 px-3 py-1.5 mt-1.5 text-sm outline-none"
+            onChange={handleCheckInChange}
+            required
           />
         </div>
 
         <div>
           <div className="flex items-center gap-2">
             <img src={assets.calenderIcon} className="h-4" />
-
             <label htmlFor="checkOut">Check out</label>
           </div>
           <input
             id="checkOut"
             type="date"
             ref={checkOutRef}
+            min={minCheckOut}
             className=" rounded border border-gray-200 px-3 py-1.5 mt-1.5 text-sm outline-none"
+            required
           />
         </div>
 
@@ -120,6 +130,7 @@ export default function Hero() {
             ref={guestsRef}
             className=" rounded border border-gray-200 px-3 py-1.5 mt-1.5 text-sm outline-none  max-w-16"
             placeholder="0"
+            required
           />
         </div>
 
