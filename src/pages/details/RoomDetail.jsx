@@ -9,6 +9,7 @@ import {
   exclusiveOffers,
 } from "../../assets/assets";
 import DetailImage from "../../components/DetailImage";
+import { toast } from "react-toastify";
 
 export default function RoomDetail() {
   const { id } = useParams();
@@ -46,7 +47,12 @@ export default function RoomDetail() {
     const bookings = JSON.parse(localStorage.getItem("bookings") || []);
     bookings.push(booking);
     localStorage.setItem("bookings", JSON.stringify(bookings));
-    navigate("/my-bookings");
+    toast.success("The hotel has been booked", {
+      position: "top-center",
+    });
+    setTimeout(() => {
+      navigate("/my-bookings");
+    }, 1000);
   }
 
   function handleCheckInChange(e) {

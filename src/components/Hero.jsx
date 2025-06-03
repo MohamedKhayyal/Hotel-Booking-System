@@ -2,6 +2,7 @@ import { assets, cities, roomsDummyData } from "../assets/assets";
 import heroImage from "../assets/heroImage.png";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 export default function Hero() {
   const destinationRef = useRef();
   const checkInRef = useRef();
@@ -44,8 +45,12 @@ export default function Hero() {
     const bookings = JSON.parse(localStorage.getItem("bookings") || "[]");
     bookings.push(booking);
     localStorage.setItem("bookings", JSON.stringify(bookings));
-
-    navigate("/my-bookings");
+    toast.success("The hotel has been booked", {
+      position: "top-center",
+    });
+    setTimeout(() => {
+      navigate("/my-bookings");
+    }, 1000);
   }
 
   return (

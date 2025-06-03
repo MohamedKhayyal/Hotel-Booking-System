@@ -1,4 +1,5 @@
 import { Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import Navbar from "./components/Navbar";
 import Home from "./pages/home/Home";
 import Footer from "./components/Footer";
@@ -18,6 +19,7 @@ export default function App() {
           <Route path="/my-bookings" element={<Book />} />
         </Routes>
       </div>
+      <ToastContainer />
       <Footer />
     </div>
   );

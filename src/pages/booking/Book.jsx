@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { SignedIn, SignedOut, RedirectToSignIn } from "@clerk/clerk-react";
 import { assets } from "../../assets/assets";
+import { toast } from "react-toastify";
 
 export default function Book() {
   const [bookings, setBookings] = useState([]);
@@ -14,6 +15,10 @@ export default function Book() {
     const updated = bookings.filter((_, i) => i !== idx);
     setBookings(updated);
     localStorage.setItem("bookings", JSON.stringify(updated));
+    toast.error("The hotel has been deleted", {
+      position: "top-center",
+    });
+    setTimeout(() => {}, 1000);
   };
 
   return (
