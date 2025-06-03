@@ -1,4 +1,4 @@
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./pages/home/Home";
 import Footer from "./components/Footer";
@@ -7,11 +7,9 @@ import RoomDetail from "./pages/details/RoomDetail";
 import Book from "./pages/booking/Book";
 
 export default function App() {
-  const isOwnerPath = useLocation().pathname.includes("owner");
-
   return (
     <div>
-      {!isOwnerPath && <Navbar />}
+      <Navbar />
       <div className="min-h-[70vh]">
         <Routes>
           <Route index path="/" element={<Home />} />
@@ -20,7 +18,7 @@ export default function App() {
           <Route path="/my-bookings" element={<Book />} />
         </Routes>
       </div>
-      {!isOwnerPath && <Footer />}
+      <Footer />
     </div>
   );
 }

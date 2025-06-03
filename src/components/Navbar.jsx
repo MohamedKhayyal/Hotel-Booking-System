@@ -40,8 +40,6 @@ export default function Navbar() {
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "Hotels", path: "/rooms" },
-    { name: "Experiance", path: "/Experiance" },
-    { name: "About", path: "/About" },
   ];
 
   return (
@@ -85,18 +83,6 @@ export default function Navbar() {
             />
           </Link>
         ))}
-        {user && (
-          <button
-            onClick={() => navigate("/owner")}
-            className={`border px-4 py-1 text-sm font-light rounded-full cursor-pointer ${
-              location.pathname !== "/" || isScrolled
-                ? "text-black"
-                : "text-white"
-            } transition-all`}
-          >
-            Dashboard
-          </button>
-        )}
       </div>
       <div className="hidden md:flex items-center gap-4">
         {user ? (
@@ -176,15 +162,6 @@ export default function Navbar() {
             {link.name}
           </Link>
         ))}
-
-        {user && (
-          <button
-            onClick={() => navigate("/owner")}
-            className="border px-4 py-1 text-sm font-light rounded-full cursor-pointer transition-all"
-          >
-            Dashboard
-          </button>
-        )}
         {user ? (
           <UserButton>
             <UserButton.MenuItems>
